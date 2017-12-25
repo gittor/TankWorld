@@ -20,7 +20,7 @@ cc.Class({
     },
 
     start () {
-        this.step = 30;
+        this.step = 2;
         this.direction = 'down';
         this.accMoveTime = 0;
         this.camp = Tool.Enermy|Tool.Tank;
@@ -46,9 +46,9 @@ cc.Class({
 
     update(dt) {
         this.accMoveTime += dt;
-        if(this.accMoveTime<1)
-            return;
-        this.accMoveTime -= 1;
+        // if(this.accMoveTime<1)
+        //     return;
+        // this.accMoveTime -= 1;
         this.checkMove('down');
     },
     

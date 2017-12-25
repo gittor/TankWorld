@@ -34,12 +34,17 @@ cc.Class({
             default: null,
             type: cc.Node
         },
+        debugLab: {
+            default: null,
+            type: cc.Label,
+        }
     },
 
     start () {
         inst = this;
         this.mapObject = [];
-        this.p1.position = cc.p(300,30);
+        // this.p1.position = cc.p(300,30);
+        this.p1.node.position = cc.p(30,218);
         this.hideEnermy = [];
         for (let i = 0; i < 20; i++) {
             let node = cc.instantiate(this.hideEnermyTemp);
@@ -71,5 +76,7 @@ cc.Class({
         this.hideEnermy.pop().removeFromParent();
     },
 
-    // update (dt) {},
+    update (dt) {
+        this.debugLab.string = `p1.pos==${this.p1.node.position}`;
+    },
 });

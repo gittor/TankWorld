@@ -52,20 +52,20 @@ export function getCheckPos(node, direction){
     switch(direction)
     {
         case 'up':
-            ret.push(node.position.add( cc.p(-size,size) ));
-            ret.push(node.position.add( cc.p(0,size) ));
+            ret.push(node.position.add( cc.p(-size+1,size-1) ));
+            ret.push(node.position.add( cc.p(size-1,size-1) ));
         break;
         case 'down':
-            ret.push(node.position.add( cc.p(-size,0) ));
-            ret.push(node.position.add( cc.p(0,0) ));
+            ret.push(node.position.add( cc.p(-size+1,-size+1) ));
+            ret.push(node.position.add( cc.p(size-1,-size+1) ));
         break;
         case 'left':
-            ret.push(node.position.add( cc.p(-size,size) ));
-            ret.push(node.position.add( cc.p(-size,0) ));
+            ret.push(node.position.add( cc.p(-size+1,size-1) ));
+            ret.push(node.position.add( cc.p(-size+1,-size+1) ));
         break;
         case 'right':
-            ret.push(node.position.add( cc.p(0,size) ));
-            ret.push(node.position.add( cc.p(0,0) ));
+            ret.push(node.position.add( cc.p(size-1,size-1) ));
+            ret.push(node.position.add( cc.p(size-1,-size+1) ));
         break;
         default:
         assert(false);
@@ -82,6 +82,7 @@ export function canMove(node, direction, step)
     for (var i = 0; i < pts.length; i++) {
         var newpos = pts[i].add(dis);
         if (!GameScene.inst.mapCtrl.canStand(newpos)) {
+        	// console.log(pts[i]);
             canStand = false;
             break;
         }

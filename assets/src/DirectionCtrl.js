@@ -99,6 +99,8 @@ cc.Class({
     update (dt) {
         if (!this.point.active)
             return;
+        this.moveTank();
+        return;
         this.accTouchTime += dt;
         if (this.accTouchTime>=0.1) {
             this.accTouchTime-=0.1;

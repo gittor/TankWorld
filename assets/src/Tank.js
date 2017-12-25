@@ -35,8 +35,24 @@ cc.Class({
     // onLoad () {},
 
     start () {
-        this.step = 30;
+        this.step = 2;
         this.direction = 'up';
+    },
+
+    formatPosition(){
+        var pos = this.node.position;
+        switch(this.direction)
+        {
+            case 'up':
+            case 'down':
+                pos.x = Math.round(pos.x/30)*30;
+                break;
+            case 'left':
+            case 'right':
+                pos.y = Math.round(pos.y/30)*30;
+                break;
+        }
+        this.node.position = pos;
     },
 
     checkMove(dir) {
@@ -46,6 +62,10 @@ cc.Class({
         {
             var dis = Tool.dir2p(dir).mul(this.step);
             this.node.position = this.node.position.add(dis);
+        }
+        else
+        {
+            this.formatPosition();
         }
         // console.log('tank now is at '+this.node.position.y);
     },
