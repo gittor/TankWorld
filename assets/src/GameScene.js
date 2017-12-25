@@ -26,10 +26,49 @@ cc.Class({
             default: null,
             type: require('MapCtrl'),
         },
+        hideEnermyBg: {
+            default: null,
+            type: cc.Node
+        },
+        hideEnermyTemp: {
+            default: null,
+            type: cc.Node
+        },
     },
 
     start () {
         inst = this;
+        this.mapObject = [];
+        this.p1.position = cc.p(300,30);
+        this.hideEnermy = [];
+        for (let i = 0; i < 20; i++) {
+            let node = cc.instantiate(this.hideEnermyTemp);
+            node.parent = this.hideEnermyBg;
+            node.position = cc.p(Math.floor(i%2)*40, -Math.floor(i/2)*40);
+            this.hideEnermy.push(node);
+        };
+    },
+
+    addMapObject(obj){
+        obj.node.parent = this.mapCtrl.tileMap.node;
+        this.mapObject.push(obj);
+    },
+    rmMapObject(obj){
+        obj.node.removeFromParent();
+        this.mapObject = this.mapObject.filter(x=>x!==obj);
+    },
+    cntMapObject(fun) {
+        let ret = 0;
+        for(let x of this.mapObject){
+            if (fun(x)) {
+                ret += 1;
+            }
+        }
+        return ret;
+    },
+
+    subOneHideEnermy(){
+        this.hideEnermy.pop().removeFromParent();
     },
 
     // update (dt) {},

@@ -7,17 +7,27 @@
 // Learn life-cycle callbacks:
 //  - [Chinese] http://www.cocos.com/docs/creator/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/editors_and_tools/creator-chapters/scripting/life-cycle-callbacks/index.html
-const Tool = require('Tool');
-const GameScene = require('GameScene');
+var Tool = require('Tool');
+var Bullet = require('Bullet');
 
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        tank: {
+        bullet: {
             default: null,
-            type: cc.Node,
+            type: cc.Prefab
         },
+        direction: {
+            get: function() {
+                return this._direction;
+            },
+            set: function(v) {
+                this._direction = v;
+                this.node.rotation = Tool.dir2rot(v);
+            }
+        },
+        camp: Tool.Player1|Tool.Tank,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -26,33 +36,29 @@ cc.Class({
 
     start () {
         this.step = 30;
-        // console.log(GameScene.inst.mapCtrl.canStand( cc.p(30.00, -0.00) ));
-        // console.log(GameScene.inst.mapCtrl.pos2tile( cc.p(0,780) ));
-        // console.log(-0<0);
-        // console.log(0<0);
+        this.direction = 'up';
     },
 
     checkMove(dir) {
-        this.tank.rotation = Tool.dir2rot(dir);
-        var pts = [];
-        pts[0] = this.tank.position.sub( cc.p(30,30) );
-        pts[1] = cc.p(pts[0].x+30, pts[0].y);
-        pts[2] = cc.p(pts[0].x+30, pts[0].y+30);
-        pts[3] = cc.p(pts[0].x, pts[0].y+30);
-        var dis = Tool.dir2p(dir).mul(this.step);
+        this.direction = dir;
 
-        var canStand = true;
-        for (var i = 0; i < pts.length; i++) {
-            var newpos = pts[i].add(dis);
-            if (!GameScene.inst.mapCtrl.canStand(newpos)) {
-                canStand = false;
-                break;
-            }
-        }
-        if (canStand)
+        if (Tool.canMove(this.node, this.direction, this.step))
         {
-            this.tank.position = this.tank.position.add(dis);
+            var dis = Tool.dir2p(dir).mul(this.step);
+            this.node.position = this.node.position.add(dis);
         }
-        // console.log('tank now is at '+this.tank.position.y);
+        // console.log('tank now is at '+this.node.position.y);
+    },
+    
+    checkFire() {
+        var GameScene = require('GameScene');
+        if (GameScene.inst.cntMapObject(x=>x.camp&(Tool.Bullet|Tool.Player1))>=1)
+        {
+            return;    
+        }
+        var bullet = Tool.createBullet(this);
+        bullet.setTexture('bullet');
+        bullet.camp |= Tool.Player;
+        GameScene.inst.addMapObject(bullet);
     },
 });
