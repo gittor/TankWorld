@@ -19,11 +19,16 @@ cc.Class({
         }
     },
 
-    start () {
+    onLoad () {
         this.step = 2;
         this.direction = 'down';
         this.accMoveTime = 0;
         this.camp = Tool.Enermy|Tool.Tank;
+        this.schedule(this.autoChangeDirection, 3);
+    },
+
+    autoChangeDirection(dt) {
+        this.direction = Tool.randDirection(this.direction);
     },
 
     setEnermyType(type) {
@@ -31,25 +36,27 @@ cc.Class({
         {
             case 0:
                 this.sprite.spriteFrame = cc.loader.getRes("enermy0", cc.SpriteFrame);
+                this.step = 2;
                 break;
             case 1:
                 this.sprite.spriteFrame = cc.loader.getRes("enermy1", cc.SpriteFrame);
+                this.step = 4;
                 break;
             case 2:
                 this.sprite.spriteFrame = cc.loader.getRes("enermy2", cc.SpriteFrame);
+                this.step = 6;
                 break;
             case 3:
                 this.sprite.spriteFrame = cc.loader.getRes("enermy3", cc.SpriteFrame);
+                this.step = 16;
                 break;
         }
     },
 
     update(dt) {
-        this.accMoveTime += dt;
-        // if(this.accMoveTime<1)
-        //     return;
-        // this.accMoveTime -= 1;
-        this.checkMove('down');
+        if(!this.checkMove(this.direction)) {
+            this.autoChangeDirection();
+        }
     },
     
     // checkFire() {

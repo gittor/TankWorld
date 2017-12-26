@@ -19,7 +19,7 @@ cc.Class({
         },
     },
 
-    start() {
+    onLoad() {
         this.accMoveTime = 0;
         this.createIndex = -1;
     },
@@ -35,16 +35,16 @@ cc.Class({
     },
 
     checkEnermy() {
-        if(Tool.GameScene().cntMapObject(x=>x.camp&(Tool.Enermy|Tool.Tank))===3)
+        if(Tool.GameScene().cntMapObject(x=>x.camp&(Tool.Enermy|Tool.Tank))===4)
             return;
         if (Tool.GameScene().hideEnermy.length===0)
             return;
         var node = cc.instantiate(this.EnermyTankPrefab);
         var enermy = node.getComponent(require('EnermyTank'));
         node.position = this.getCurPosition();
-        enermy.setEnermyType(this.createIndex);
         Tool.GameScene().addMapObject(enermy);
         Tool.GameScene().subOneHideEnermy();
+        enermy.setEnermyType(1);
     },
 
     update(dt) {

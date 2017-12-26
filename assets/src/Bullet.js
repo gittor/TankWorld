@@ -29,7 +29,7 @@ cc.Class({
         camp: Tool.Bullet,
     },
 
-    start () {
+    onLoad () {
         this.accMoveTime = 0;
         this.step = 5;
     },

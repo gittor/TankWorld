@@ -111,6 +111,18 @@ export function GameScene() {
 	return require('GameScene').inst;
 }
 
+export function randint() {
+	return Math.floor(Math.random()*1000000);
+}
+
+export function choose(arr) {
+	return arr[ this.randint()%arr.length ];
+}
+
+export function randDirection(except) {
+	return this.choose(['up', 'down', 'left', 'right'].filter(x=>x!=except));
+}
+
 
 export let Brick = 16;
 export let Iron = 15;

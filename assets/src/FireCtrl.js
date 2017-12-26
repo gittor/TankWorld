@@ -20,7 +20,7 @@ cc.Class({
         },
     },
 
-    start () {
+    onLoad () {
         this.accTouchTime = 0;
         this.firebtn.active = false;
         var win = cc.director.getWinSize();

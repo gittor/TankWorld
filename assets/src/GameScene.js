@@ -40,7 +40,7 @@ cc.Class({
         }
     },
 
-    start () {
+    onLoad () {
         inst = this;
         this.mapObject = [];
         // this.p1.position = cc.p(300,30);
@@ -57,12 +57,15 @@ cc.Class({
     addMapObject(obj){
         obj.node.parent = this.mapCtrl.tileMap.node;
         this.mapObject.push(obj);
+        // console.log('addMapObject', this.mapObject.length);
     },
     rmMapObject(obj){
         obj.node.removeFromParent();
         this.mapObject = this.mapObject.filter(x=>x!==obj);
+        // console.log('rmMapObject', this.mapObject.length);
     },
     cntMapObject(fun) {
+        // console.log('cntMapObject', fun);
         let ret = 0;
         for(let x of this.mapObject){
             if (fun(x)) {
@@ -77,6 +80,6 @@ cc.Class({
     },
 
     update (dt) {
-        this.debugLab.string = `p1.pos==${this.p1.node.position}`;
+        this.debugLab.string = `${new Date()}`;
     },
 });

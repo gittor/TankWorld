@@ -30,11 +30,7 @@ cc.Class({
         camp: Tool.Player1|Tool.Tank,
     },
 
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {},
-
-    start () {
+    onLoad () {
         this.step = 2;
         this.direction = 'up';
     },
@@ -57,28 +53,29 @@ cc.Class({
 
     checkMove(dir) {
         this.direction = dir;
-
         if (Tool.canMove(this.node, this.direction, this.step))
         {
             var dis = Tool.dir2p(dir).mul(this.step);
             this.node.position = this.node.position.add(dis);
+            return true;
         }
         else
         {
             this.formatPosition();
+            return false;
         }
         // console.log('tank now is at '+this.node.position.y);
     },
     
     checkFire() {
-        var GameScene = require('GameScene');
-        if (GameScene.inst.cntMapObject(x=>x.camp&(Tool.Bullet|Tool.Player1))>=1)
+        if (Tool.GameScene().cntMapObject(x=>x.camp&(Tool.Bullet|Tool.Player1))>=1)
         {
-            return;    
+            // console.log(GameScene.inst.cntMapObject(x=>x.camp&(Tool.Bullet|Tool.Player1)));
+            return;
         }
         var bullet = Tool.createBullet(this);
         bullet.setTexture('bullet');
         bullet.camp |= Tool.Player;
-        GameScene.inst.addMapObject(bullet);
+        Tool.GameScene().addMapObject(bullet);
     },
 });
