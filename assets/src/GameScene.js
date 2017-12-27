@@ -44,7 +44,7 @@ cc.Class({
         inst = this;
         this.mapObject = [];
         // this.p1.position = cc.p(300,30);
-        this.p1.node.position = cc.p(30,218);
+        this.p1.node.position = cc.p(30,690);
         this.hideEnermy = [];
         for (let i = 0; i < 20; i++) {
             let node = cc.instantiate(this.hideEnermyTemp);
@@ -52,6 +52,15 @@ cc.Class({
             node.position = cc.p(Math.floor(i%2)*40, -Math.floor(i/2)*40);
             this.hideEnermy.push(node);
         };
+    },
+
+    onEnable () {
+        cc.director.getCollisionManager().enabled = true;
+        cc.director.getCollisionManager().enabledDebugDraw = true;
+    },
+    onDisable () {
+        cc.director.getCollisionManager().enabled = false;
+        cc.director.getCollisionManager().enabledDebugDraw = false;
     },
 
     addMapObject(obj){
@@ -80,6 +89,6 @@ cc.Class({
     },
 
     update (dt) {
-        this.debugLab.string = `${new Date()}`;
+        this.debugLab.string = `${this.p1.node.position}`;
     },
 });

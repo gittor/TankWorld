@@ -48,7 +48,7 @@ cc.Class({
         }
         else{
             GameScene.mapCtrl.onHit(this);
-            GameScene.rmMapObject(this);
+            this.onDead();
         }
         // var GameScene = require('GameScene').inst;
         // if (Tool.canBulletMove(this.node, this.direction, this.step)) {
@@ -61,11 +61,29 @@ cc.Class({
         // }
     },
 
+    onDead() {
+        Tool.GameScene().rmMapObject(this);
+    },
+
     update (dt) {
         this.accMoveTime += dt;
         if (this.accMoveTime>0.01) {
             this.accMoveTime-=0.01;
             this.autoMove();
         }
+    },
+
+    onCollisionEnter(other, self) {
+        let camp = other.node.getComponent('Tank').camp;
+        if (camp&Tool.Player1) {
+            return;
+        }
+        this.onDead();
+    },
+    onCollisionStay(other, self) {
+
+    },
+    onCollisionExit(other, self) {
+
     },
 });

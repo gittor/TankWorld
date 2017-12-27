@@ -90,6 +90,31 @@ export function canMove(node, direction, step)
     return canStand;
 }
 
+export function willCollisionObject(node, direction, step)
+{
+	var dis = this.dir2p(direction).mul(step);
+	var pts = this.getCheckPos(node, direction);
+	let willcollision = false;
+	for(let x of this.GameScene().mapObject)
+	{
+		let p = x.node.position;
+		let s = x.node.width;
+		let box = cc.rect(p.x-s/2,p.y-s/2,s,s);
+		for(let y of pts)
+		{
+			// console.log(box, y);
+			if (box.contains(y)) {
+				willcollision = true;
+				break;
+			}
+		}
+		if (willcollision) {
+			break;
+		}
+	}
+	return willcollision;
+}
+
 export function canBulletMove(node, direction, step)
 {
 	var GameScene = require('GameScene');
@@ -121,6 +146,17 @@ export function choose(arr) {
 
 export function randDirection(except) {
 	return this.choose(['up', 'down', 'left', 'right'].filter(x=>x!=except));
+}
+
+export function resolveCamp(camp) {
+	var ret = [ camp,
+				camp&this.Player1 ? "Player1" : null,
+				camp&this.Player2 ? "Player2" : null,
+				camp&this.Enermy ? "Enermy" : null,
+				camp&this.Tank ? "Tank" : null,
+				camp&this.Bullet ? "Bullet" : null,
+				].filter(x=>x);
+	return ret.join(',');
 }
 
 

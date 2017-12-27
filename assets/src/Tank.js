@@ -33,6 +33,7 @@ cc.Class({
     onLoad () {
         this.step = 2;
         this.direction = 'up';
+        this.collisionObject = 0;
     },
 
     formatPosition(){
@@ -53,16 +54,21 @@ cc.Class({
 
     checkMove(dir) {
         this.direction = dir;
-        if (Tool.canMove(this.node, this.direction, this.step))
+        if (!Tool.canMove(this.node, this.direction, this.step))
+        {
+            this.formatPosition();
+            return false;
+        }
+        else if(this.collisionObject===0 && Tool.willCollisionObject(this.node,this.direction,this.step))
+        {
+            // console.log('collision');
+            return false;
+        }
+        else
         {
             var dis = Tool.dir2p(dir).mul(this.step);
             this.node.position = this.node.position.add(dis);
             return true;
-        }
-        else
-        {
-            this.formatPosition();
-            return false;
         }
         // console.log('tank now is at '+this.node.position.y);
     },
@@ -75,7 +81,22 @@ cc.Class({
         }
         var bullet = Tool.createBullet(this);
         bullet.setTexture('bullet');
-        bullet.camp |= Tool.Player;
+        bullet.camp |= Tool.Player1;
         Tool.GameScene().addMapObject(bullet);
+    },
+
+    onCollisionEnter(other, self) {
+        if (other.node.getComponent('Tank')) {
+            this.collisionObject++;
+            // console.log('onCollisionEnter', this.collisionObject);
+        }
+    },
+    onCollisionStay(other, self) {
+        // console.log('stay');
+    },
+    onCollisionExit(other, self) {
+        if (other.node.getComponent('Tank'))
+            this.collisionObject--;
+        // console.log('onCollisionExit', this.collisionObject);
     },
 });

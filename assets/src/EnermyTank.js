@@ -54,20 +54,31 @@ cc.Class({
     },
 
     update(dt) {
-        if(!this.checkMove(this.direction)) {
-            this.autoChangeDirection();
-        }
+        // if(!this.checkMove(this.direction)) {
+        //     this.autoChangeDirection();
+        // }
+    },
+
+    onDead() {
+        Tool.GameScene().rmMapObject(this);
     },
     
-    // checkFire() {
-    //     var GameScene = require('GameScene');
-    //     if (GameScene.inst.cntMapObject(x=>x.camp&(Tool.Bullet|Tool.Player1))>=1)
-    //     {
-    //         return;    
-    //     }
-    //     var bullet = Tool.createBullet(this);
-    //     bullet.setTexture('bullet');
-    //     bullet.camp |= Tool.Player;
-    //     GameScene.inst.addMapObject(bullet);
-    // },
+    onCollisionEnter(other, self) {
+        let com = other.node.getComponent('Bullet');
+        if (com) {
+            // console.log(Tool.resolveCamp(com.camp));
+            this.onDead();
+            return;
+        }
+        com = other.node.getComponent('Tank');
+        if (com) {
+            // console.log('EnermyTank',Tool.resolveCamp(com.camp));
+        }
+    },
+    onCollisionStay(other, self) {
+        // console.log('stay', other, self);
+    },
+    onCollisionExit(other, self) {
+        // console.log('exit', other, self);
+    },
 });
