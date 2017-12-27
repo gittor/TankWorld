@@ -503,8 +503,11 @@
       "__id__": 10
     },
     "_enabled": true,
-    "bullet": null,
-    "camp": 9
+    "camp": 9,
+    "step": 5,
+    "bulletPrefab": {
+      "__uuid__": "1a9daa1c-6556-4041-a2e4-69009b50fe84"
+    }
   },
   {
     "__type__": "cc.BoxCollider",

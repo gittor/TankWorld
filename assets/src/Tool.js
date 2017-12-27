@@ -97,12 +97,14 @@ export function willCollisionObject(node, direction, step)
 	let willcollision = false;
 	for(let x of this.GameScene().mapObject)
 	{
+		if (x.node===node) {
+			continue;
+		}
 		let p = x.node.position;
 		let s = x.node.width;
 		let box = cc.rect(p.x-s/2,p.y-s/2,s,s);
 		for(let y of pts)
 		{
-			// console.log(box, y);
 			if (box.contains(y)) {
 				willcollision = true;
 				break;
@@ -159,6 +161,14 @@ export function resolveCamp(camp) {
 	return ret.join(',');
 }
 
+export function campHasAll(camp, ...args){
+	for(let x of args){
+        if( !(camp & x) ){
+            return false;
+        }
+    }
+    return true;
+}
 
 export let Brick = 16;
 export let Iron = 15;

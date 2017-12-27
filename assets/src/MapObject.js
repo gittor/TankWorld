@@ -10,53 +10,50 @@
 var Tool = require('Tool');
 
 cc.Class({
-    extends: require('MapObject'),
+    extends: cc.Component,
 
     properties: {
-        sprite: {
-            default: null,
-            type: cc.Sprite,
+        direction: {
+            get: function(){
+                return this._direction;
+            },
+            set: function(v){
+                this._direction = v;
+                this.node.rotation = Tool.dir2rot(v);
+            }
         },
+        camp: 0,
+        blood: {
+            get: function(){
+                return this._blood||1;
+            },
+            set: function(v){
+                this.onBloodWillChange(v);
+                this._blood = v;
+                if (this._blood===0) {
+                    this.die();
+                }
+            }
+        },
+        step: 5,
     },
 
     onLoad () {
-        this.accMoveTime = 0;
-        this.step = 5;
-        this.schedule(this.checkMove, 0);
     },
 
-    setTexture(tex_name) {
-        this.sprite.spriteFrame = cc.loader.getRes(tex_name, cc.SpriteFrame);
-        this.node.width = this.sprite.node.width;
-        this.node.height = this.sprite.node.height;
+    die() {
+        this.onDead();
+        Tool.GameScene().rmMapObject(this);
     },
 
-    checkMove(){
-        if (Tool.canBulletMove(this.node, this.direction, 0)) {
-            var newpos = this.node.position.add( Tool.dir2p(this.direction).mul(this.step) );
-            this.node.position = newpos;
-        }
-        else{
-            Tool.GameScene().mapCtrl.onHit(this);
-            this.blood--;
-        }
-    },
-
-    onDead() {
+    onBloodWillChange(){
 
     },
 
     onCollisionEnter(other, self) {
-        let camp = other.node.getComponent('MapObject').camp;
-        if (camp&Tool.Player) {
-            return;
-        }
-        this.blood--;
     },
     onCollisionStay(other, self) {
-
     },
     onCollisionExit(other, self) {
-
     },
 });

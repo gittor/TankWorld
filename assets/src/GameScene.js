@@ -8,7 +8,8 @@
 //  - [Chinese] http://www.cocos.com/docs/creator/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/editors_and_tools/creator-chapters/scripting/life-cycle-callbacks/index.html
 // const GameCenter = require("GameCenter");
-const Tank = require("Tank");
+var Tank = require("Tank");
+var Tool = require('Tool');
 export var inst = null;
 cc.Class({
     extends: cc.Component,
@@ -42,7 +43,7 @@ cc.Class({
 
     onLoad () {
         inst = this;
-        this.mapObject = [];
+        this.mapObject = [this.p1];
         // this.p1.position = cc.p(300,30);
         this.p1.node.position = cc.p(30,690);
         this.hideEnermy = [];
@@ -66,6 +67,7 @@ cc.Class({
     addMapObject(obj){
         obj.node.parent = this.mapCtrl.tileMap.node;
         this.mapObject.push(obj);
+        // cc.assert(obj instanceof require('MapObject'));
         // console.log('addMapObject', this.mapObject.length);
     },
     rmMapObject(obj){
@@ -89,6 +91,12 @@ cc.Class({
     },
 
     update (dt) {
-        this.debugLab.string = `${this.p1.node.position}`;
+        this.debugLab.string = '';
+        for(let x of this.mapObject)
+        {
+            // this.debugLab.string = typeof x.camp;
+            // this.debugLab.string += Tool.resolveCamp(x.camp);
+            // this.debugLab.string += '\n';
+        }
     },
 });

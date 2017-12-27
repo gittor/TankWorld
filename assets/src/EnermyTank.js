@@ -16,15 +16,28 @@ cc.Class({
         sprite: {
             default: null,
             type: cc.Sprite,
+        },
+        bloodLabel: {
+            default: null,
+            type: cc.Label,
+        },
+        bloodBack: {
+            default: null,
+            type: cc.Label,
         }
     },
 
     onLoad () {
+        this.init();
         this.step = 2;
         this.direction = 'down';
-        this.accMoveTime = 0;
         this.camp = Tool.Enermy|Tool.Tank;
         this.schedule(this.autoChangeDirection, 3);
+    },
+
+    onBloodWillChange(v) {
+        this.bloodLabel.string = v+"";
+        this.bloodBack.string = v+"";
     },
 
     autoChangeDirection(dt) {
@@ -36,49 +49,50 @@ cc.Class({
         {
             case 0:
                 this.sprite.spriteFrame = cc.loader.getRes("enermy0", cc.SpriteFrame);
-                this.step = 2;
+                this.step = 1;
+                this.blood = 1;
                 break;
             case 1:
                 this.sprite.spriteFrame = cc.loader.getRes("enermy1", cc.SpriteFrame);
-                this.step = 4;
+                this.step = 2;
+                this.blood = 2;
                 break;
             case 2:
                 this.sprite.spriteFrame = cc.loader.getRes("enermy2", cc.SpriteFrame);
-                this.step = 6;
+                this.step = 3;
+                this.blood = 3;
                 break;
             case 3:
                 this.sprite.spriteFrame = cc.loader.getRes("enermy3", cc.SpriteFrame);
-                this.step = 16;
+                this.step = 4;
+                this.blood = 4;
                 break;
         }
     },
 
     update(dt) {
-        // if(!this.checkMove(this.direction)) {
-        //     this.autoChangeDirection();
-        // }
+        if(!this.checkMove(this.direction)) {
+            this.autoChangeDirection();
+        }
     },
 
     onDead() {
-        Tool.GameScene().rmMapObject(this);
+
     },
     
     onCollisionEnter(other, self) {
-        let com = other.node.getComponent('Bullet');
-        if (com) {
-            // console.log(Tool.resolveCamp(com.camp));
-            this.onDead();
-            return;
-        }
-        com = other.node.getComponent('Tank');
-        if (com) {
-            // console.log('EnermyTank',Tool.resolveCamp(com.camp));
+        this.checkCollisionNumber(other, self, true);
+        // console.log(this.checkCollisionNumber);
+        let camp = other.node.getComponent('MapObject').camp;
+        console.log('EnermyTank', Tool.resolveCamp(camp), this.collisionTankNumber);
+        if (Tool.campHasAll(camp,Tool.Bullet,Tool.Player)) {
+            this.blood--;
         }
     },
     onCollisionStay(other, self) {
-        // console.log('stay', other, self);
+
     },
     onCollisionExit(other, self) {
-        // console.log('exit', other, self);
+        this.checkCollisionNumber(other, self, false);
     },
 });
