@@ -17,6 +17,10 @@ cc.Class({
             default: null,
             type: cc.Prefab,
         },
+        bornNode: {
+            default: null,
+            type: cc.Node,
+        }
     },
 
     onLoad() {
@@ -39,12 +43,25 @@ cc.Class({
             return;
         if (Tool.GameScene().hideEnermy.length===0)
             return;
-        var node = cc.instantiate(this.EnermyTankPrefab);
-        var enermy = node.getComponent(require('EnermyTank'));
-        node.position = this.getCurPosition();
-        Tool.GameScene().addMapObject(enermy);
+        this.delayCreateEnermy(this.getCurPosition(), Tool.randint()%4);
+    },
+
+    delayCreateEnermy(pos, type){
         Tool.GameScene().subOneHideEnermy();
-        enermy.setEnermyType(1);
+
+        var born = cc.instantiate(this.bornNode);
+        born.parent = Tool.GameScene().mapCtrl.node;
+        born.position = pos;
+        born.getComponent(cc.Animation).play('born');
+
+        this.scheduleOnce(()=>{
+            born.removeFromParent();
+            var node = cc.instantiate(this.EnermyTankPrefab);
+            var enermy = node.getComponent('EnermyTank');
+            node.position = pos;
+            Tool.GameScene().addMapObject(enermy);
+            enermy.setEnermyType(type);
+        }, 1);
     },
 
     update(dt) {
