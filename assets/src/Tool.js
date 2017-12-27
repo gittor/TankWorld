@@ -37,14 +37,14 @@ export function dir2rot(dir){
 	}
 }
 
-export function createBullet(tank) {
-	var prefab = cc.loader.getRes('bullet', cc.Prefab);
-	var node = cc.instantiate(prefab);
-	var bullet = node.getComponent(require('Bullet'));
-	bullet.direction = tank.direction;
-	node.position = tank.node.position;
-	return bullet;
-}
+// export function createBullet(tank) {
+// 	var prefab = cc.loader.getRes('bullet', cc.Prefab);
+// 	var node = cc.instantiate(prefab);
+// 	var bullet = node.getComponent(require('Bullet'));
+// 	bullet.direction = tank.direction;
+// 	node.position = tank.node.position;
+// 	return bullet;
+// }
 
 export function getCheckPos(node, direction){
 	var size = node.width/2;

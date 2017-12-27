@@ -18,6 +18,10 @@ cc.Class({
             default: null,
             type: cc.Prefab,
         },
+        deadNode: {
+            default: null,
+            type: cc.Node,
+        },
     },
 
     init () {
@@ -29,6 +33,12 @@ cc.Class({
 
     onLoad() {
         this.init();
+    },
+
+    onDead() {
+        this.deadNode.active = true;
+        this.deadNode.parent = Tool.GameScene().mapCtrl.node;
+        this.deadNode.getComponent(cc.Animation).play('blast');
     },
 
     formatPosition(){
@@ -72,11 +82,14 @@ cc.Class({
     },
     
     checkFire() {
-        if (Tool.GameScene().cntMapObject(x=>Tool.campHasAll(x.camp,Tool.Bullet,Tool.Player1))>=1){
+        if (Tool.GameScene().cntMapObject(x=>Tool.campHasAll(x.camp,Tool.Bullet,Tool.Player1))>=3){
             // console.log('can not fire');
             return;
         }
-        var bullet = Tool.createBullet(this);
+        var node = cc.instantiate(this.bulletPrefab);
+        node.position = this.node.position;
+        var bullet = node.getComponent(Bullet);
+        bullet.direction = this.direction;
         bullet.setTexture('bullet');
         bullet.camp = Tool.Player1|Tool.Bullet;
         Tool.GameScene().addMapObject(bullet);

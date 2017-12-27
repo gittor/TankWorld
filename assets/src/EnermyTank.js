@@ -71,20 +71,23 @@ cc.Class({
     },
 
     update(dt) {
-        if(!this.checkMove(this.direction)) {
-            this.autoChangeDirection();
-        }
+        // if(!this.checkMove(this.direction)) {
+        //     this.autoChangeDirection();
+        // }
     },
 
     onDead() {
-
+        this.deadNode.active = true;
+        this.deadNode.parent = Tool.GameScene().mapCtrl.node;
+        this.deadNode.position = this.node.position;
+        this.deadNode.getComponent(cc.Animation).play('blast');
+        var seq = cc.sequence(cc.delayTime(0.6), cc.callFunc(()=>this.deadNode.removeFromParent()));
+        this.deadNode.runAction(seq);
     },
     
     onCollisionEnter(other, self) {
         this.checkCollisionNumber(other, self, true);
-        // console.log(this.checkCollisionNumber);
         let camp = other.node.getComponent('MapObject').camp;
-        console.log('EnermyTank', Tool.resolveCamp(camp), this.collisionTankNumber);
         if (Tool.campHasAll(camp,Tool.Bullet,Tool.Player)) {
             this.blood--;
         }

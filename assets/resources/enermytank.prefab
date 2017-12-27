@@ -16,23 +16,26 @@
     "_children": [
       {
         "__id__": 2
+      },
+      {
+        "__id__": 8
       }
     ],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 8
+        "__id__": 12
       },
       {
-        "__id__": 9
+        "__id__": 13
       },
       {
-        "__id__": 10
+        "__id__": 14
       }
     ],
     "_prefab": {
-      "__id__": 11
+      "__id__": 15
     },
     "_id": "",
     "_opacity": 255,
@@ -249,6 +252,118 @@
     "sync": false
   },
   {
+    "__type__": "cc.Node",
+    "_name": "sprite",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 1
+    },
+    "_children": [],
+    "_tag": -1,
+    "_active": false,
+    "_components": [
+      {
+        "__id__": 9
+      },
+      {
+        "__id__": 10
+      }
+    ],
+    "_prefab": {
+      "__id__": 11
+    },
+    "_id": "",
+    "_opacity": 255,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_cascadeOpacityEnabled": true,
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 16,
+      "height": 13
+    },
+    "_rotationX": 0,
+    "_rotationY": 0,
+    "_scaleX": 0.5,
+    "_scaleY": 0.5,
+    "_position": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "_skewX": 0,
+    "_skewY": 0,
+    "_localZOrder": 0,
+    "_globalZOrder": 0,
+    "_opacityModifyRGB": false,
+    "groupIndex": 0
+  },
+  {
+    "__type__": "cc.Sprite",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 8
+    },
+    "_enabled": true,
+    "_spriteFrame": {
+      "__uuid__": "cb21ef8a-274e-4cb4-a25a-af9c755fcf28"
+    },
+    "_type": 0,
+    "_sizeMode": 1,
+    "_fillType": 0,
+    "_fillCenter": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "_fillStart": 0,
+    "_fillRange": 0,
+    "_isTrimmedMode": true,
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
+    "_atlas": {
+      "__uuid__": "af72405c-7ee1-49dd-a251-17e029502b6a"
+    }
+  },
+  {
+    "__type__": "cc.Animation",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 8
+    },
+    "_enabled": true,
+    "_defaultClip": null,
+    "_clips": [
+      {
+        "__uuid__": "79d7692b-5378-473f-9739-314a8e08f921"
+      }
+    ],
+    "playOnLoad": false
+  },
+  {
+    "__type__": "cc.PrefabInfo",
+    "root": {
+      "__id__": 1
+    },
+    "asset": {
+      "__uuid__": "e5d2a57f-0256-48b3-9daf-d089cf1a89c8"
+    },
+    "fileId": "d7118yAG5lKybkFOAh8koPL",
+    "sync": false
+  },
+  {
     "__type__": "cc.Sprite",
     "_name": "",
     "_objFlags": 0,
@@ -285,8 +400,11 @@
     "camp": 9,
     "step": 5,
     "bulletPrefab": null,
-    "sprite": {
+    "deadNode": {
       "__id__": 8
+    },
+    "sprite": {
+      "__id__": 12
     },
     "bloodLabel": {
       "__id__": 6
