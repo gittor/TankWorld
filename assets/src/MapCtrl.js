@@ -8,6 +8,7 @@
 //  - [Chinese] http://www.cocos.com/docs/creator/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/editors_and_tools/creator-chapters/scripting/life-cycle-callbacks/index.html
 var Tool = require('Tool');
+var GameData = require('GameData');
 
 cc.Class({
     extends: cc.Component,
@@ -20,20 +21,21 @@ cc.Class({
         roadLayer: {
             default: null,
             type: cc.TiledLayer
-        }
-    },
-
-    getRoundTiles(pos) {
-
+        },
+        dynamic: cc.Node,
     },
 
     onLoad() {
-        // for (let i = 0; i < 26; i++) {
-        //     for (let j = 0; j < 26; j++) {
-        //         let x = this.roadLayer.getTileGIDAt(cc.p(i,j));
-        //         this.roadLayer.setTileGID(x, cc.p(i, j));
-        //     };
-        // };
+
+    },
+
+    startLevel() {
+        this.tileMap.tmxAsset = cc.loader.getRes(`level${GameData.curLevel}.tmx`);
+        this.roadLayer = this.tileMap.getLayer('块层 1');
+    },
+
+    cleanup() {
+        this.dynamic.removeAllChildren();
     },
 
     pos2tile(pos) {
@@ -59,7 +61,7 @@ cc.Class({
         }
         // console.log('canStand', tile);
         var gid = this.roadLayer.getTileGIDAt(tile);
-        if (gid==0) {
+        if ([0,Tool.Grass].includes(gid)) {
             return true;
         }
         return false;
@@ -71,11 +73,9 @@ cc.Class({
             return false;
         }
         var gid = this.roadLayer.getTileGIDAt(tile);
-        if (gid==0) {
+        if ([0,Tool.Grass,Tool.Water].includes(gid)) {
             return true;
         }
-        // this.roadLayer.setTileGID(0, tile);
-        // console.log(tile);
         return false;
     },
 
@@ -87,7 +87,7 @@ cc.Class({
                 continue;
             }
             var gid = this.roadLayer.getTileGIDAt(tile);
-            if ([0, Tool.Iron].includes(gid)) {
+            if ([0, Tool.Iron, Tool.Grass].includes(gid)) {
                 continue;
             }
             this.roadLayer.setTileGID(0, tile);

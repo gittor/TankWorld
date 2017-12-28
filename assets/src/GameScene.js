@@ -10,49 +10,80 @@
 // const GameCenter = require("GameCenter");
 var Tank = require("Tank");
 var Tool = require('Tool');
+var GameState = require('GameState');
+var GameData = require('GameData');
+
 export var inst = null;
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        p1: {
-            default: null,
-            type: Tank,
-        },
-        p2: {
-            default: null,
-            type: Tank,
-        },
-        mapCtrl: {
-            default: null,
-            type: require('MapCtrl'),
-        },
-        hideEnermyBg: {
-            default: null,
-            type: cc.Node
-        },
-        hideEnermyTemp: {
-            default: null,
-            type: cc.Node
-        },
-        debugLab: {
-            default: null,
-            type: cc.Label,
-        }
+        mapCtrl: require('MapCtrl'),
+        hideEnermyBg: cc.Node,
+        hideEnermyTemp: cc.Node,
+        debugLab: cc.Label,
+        bornPrefab: cc.Prefab,
+        TankPrefab: cc.Prefab,
     },
 
     onLoad () {
         inst = this;
-        this.mapObject = [this.p1];
-        // this.p1.position = cc.p(300,30);
-        this.p1.node.position = cc.p(30,690);
+        this.cleanup();
+        this.gs = new GameState.GameState();
+        this.gs.addObserver(this);
+        this.startLevel();
+    },
+
+    cleanup(){
+        this.hideEnermyBg.removeAllChildren(true);
         this.hideEnermy = [];
-        for (let i = 0; i < 20; i++) {
+        this.p1 = undefined;
+        this.mapObject = [];
+        this.mapCtrl.cleanup();
+    },
+
+    delayCreatePlayer(type){
+        let bornpos;
+        if (type==Tool.Player1) {
+            bornpos = cc.p(300,30);
+        }
+        else if(type==Tool.Player2) {
+            bornpos = cc.p(480,30);
+        }
+
+        var born = cc.instantiate(this.bornPrefab);
+        born.position = bornpos;
+        born.getComponent('AutoRemoveScript').animDelay("born", 1.5);
+        born.parent = this.mapCtrl.dynamic;
+
+        this.scheduleOnce(()=>{
+            var node = cc.instantiate(this.TankPrefab);
+            var tank = node.getComponent('Tank');
+            node.position = bornpos;
+            this.addMapObject(tank);
+            tank.setType(type);
+            if (type==Tool.Player1) {
+                this.p1 = tank;
+            }
+            else if(type==Tool.Player2){
+                this.p2 = tank;
+            }
+        }, 1.5);
+    },
+
+    startLevel() {
+        this.cleanup();
+        this.mapCtrl.startLevel();
+        // this.delayCreatePlayer(Tool.Player1);
+        // this.p1 = this.createPlayer();
+        // this.p1.node.position = cc.p(300,30);
+        for (let i = 0; i < 6; i++) {
             let node = cc.instantiate(this.hideEnermyTemp);
             node.parent = this.hideEnermyBg;
             node.position = cc.p(Math.floor(i%2)*40, -Math.floor(i/2)*40);
             this.hideEnermy.push(node);
         };
+        this.gs.changeState(GameState.Prepare);
     },
 
     onEnable () {
@@ -65,7 +96,7 @@ cc.Class({
     },
 
     addMapObject(obj){
-        obj.node.parent = this.mapCtrl.tileMap.node;
+        obj.node.parent = this.mapCtrl.dynamic;
         this.mapObject.push(obj);
         // cc.assert(obj instanceof require('MapObject'));
         // console.log('addMapObject', this.mapObject.length);
@@ -73,7 +104,7 @@ cc.Class({
     rmMapObject(obj){
         obj.node.removeFromParent();
         this.mapObject = this.mapObject.filter(x=>x!==obj);
-        // console.log('rmMapObject', this.mapObject.length);
+        this.checkState(obj);
     },
     cntMapObject(fun) {
         // console.log('cntMapObject', fun);
@@ -86,17 +117,41 @@ cc.Class({
         return ret;
     },
 
-    subOneHideEnermy(){
+    subOneHideEnermy(enermy){
         this.hideEnermy.pop().removeFromParent();
     },
 
     update (dt) {
-        this.debugLab.string = '';
-        for(let x of this.mapObject)
-        {
-            // this.debugLab.string = typeof x.camp;
-            // this.debugLab.string += Tool.resolveCamp(x.camp);
-            // this.debugLab.string += '\n';
+        this.debugLab.string = this.cntMapObject(x=>Tool.campHasAll(x,Tool.Tank,Tool.Enermy))+"";
+    },
+    onStateChange(gs){
+        console.log('gs', gs.state);
+        if (gs.state==GameState.Prepare) {
+            this.scheduleOnce(()=>{
+                this.delayCreatePlayer(Tool.Player1);
+                gs.changeState(GameState.Gaming);
+            }, 1);
+        }
+        else if(gs.state==GameState.Failed) {
+            // this.scheduleOnce(()=>{
+            //     this.showFail();
+            // }, 3);
+        }
+        else if(gs.state==GameState.Win) {
+            // this.scheduleOnce(()=>{
+            //     this.showWin();
+            // }, 3);
+            console.log('Win', ...GameData.destroy);
+        }
+    },
+
+    checkState(mo) {
+        if (Tool.campHasAll(mo.camp,Tool.Tank,Tool.Enermy)) {
+            GameData.destroy[mo.type]++;
+        }
+        if (this.cntMapObject(x=>Tool.campHasAll(x.camp,Tool.Tank,Tool.Enermy))===0
+            && this.hideEnermy.length===0) {
+            this.gs.changeState(GameState.Win);
         }
     },
 });

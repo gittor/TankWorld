@@ -14,19 +14,12 @@ cc.Class({
     extends: require('MapObject'),
 
     properties: {
-        bulletPrefab: {
-            default: null,
-            type: cc.Prefab,
-        },
-        deadNode: {
-            default: null,
-            type: cc.Node,
-        },
+        bulletPrefab: cc.Prefab,
+        deadPrefab: cc.Prefab,
     },
 
     init () {
         this.step = 2;
-        this.camp = Tool.Tank|Tool.Player1;
         this.direction = 'up';
         this.collisionTankNumber = 0;
     },
@@ -35,10 +28,22 @@ cc.Class({
         this.init();
     },
 
+    setType(type) {
+        if (type==Tool.Player1) {
+            this.camp = Tool.Tank|Tool.Player1;
+            this.node.getComponent(cc.Sprite).spriteFrame = cc.loader.getRes('p1', cc.SpriteFrame);
+        }
+        else if (type==Tool.Player2) {
+            this.camp = Tool.Tank|Tool.Player2;
+            this.node.getComponent(cc.Sprite).spriteFrame = cc.loader.getRes('p2', cc.SpriteFrame);
+        }
+    },
+
     onDead() {
-        this.deadNode.active = true;
-        this.deadNode.parent = Tool.GameScene().mapCtrl.node;
-        this.deadNode.getComponent(cc.Animation).play('blast');
+        var node = cc.instantiate(this.deadPrefab);
+        node.position = this.node.position;
+        node.parent = Tool.GameScene().mapCtrl.dynamic;
+        node.getComponent('AutoRemoveScript').animDelay("blast", 0.6);
     },
 
     formatPosition(){

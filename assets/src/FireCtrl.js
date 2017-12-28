@@ -21,7 +21,6 @@ cc.Class({
     },
 
     onLoad () {
-        this.accTouchTime = 0;
         this.firebtn.active = false;
         var win = cc.director.getWinSize();
         this.node.width = win.width;
@@ -35,25 +34,22 @@ cc.Class({
         this.firebtn.active = true;
         let loc = event.getTouches()[0].getLocation();
         this.firebtn.position = this.node.convertToNodeSpaceAR(loc);
-        GameScene.inst.p1.checkFire();
+        this.checkFire();
     },
 
     onTouchMoving(event) {
-        // var loc = event.getTouches()[0].getLocation();
-        // this.point.position = this.bg.convertToNodeSpaceAR(loc);
+
     },
 
     onTouchEnd(event) {
         this.firebtn.active = false;
     },
 
-    update (dt) {
+    checkFire (dt) {
         if (!this.firebtn.active)
             return;
-        this.accTouchTime += dt;
-        if (this.accTouchTime>=1) {
-            this.accTouchTime-=1;
-            GameScene.inst.p1.checkFire();
-        }
+        if (!GameScene.inst.p1)
+            return;
+        GameScene.inst.p1.checkFire();
     },
 });

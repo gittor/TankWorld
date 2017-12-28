@@ -17,14 +17,6 @@ cc.Class({
             default: null,
             type: cc.Sprite,
         },
-        bloodLabel: {
-            default: null,
-            type: cc.Label,
-        },
-        bloodBack: {
-            default: null,
-            type: cc.Label,
-        }
     },
 
     onLoad () {
@@ -36,53 +28,44 @@ cc.Class({
     },
 
     onBloodWillChange(v) {
-        this.bloodLabel.string = v+"";
-        this.bloodBack.string = v+"";
+        
     },
 
     autoChangeDirection(dt) {
         this.direction = Tool.randDirection(this.direction);
     },
 
-    setEnermyType(type) {
+    setType(type) {
+        this.type = type;
         switch(type)
         {
             case 0:
                 this.sprite.spriteFrame = cc.loader.getRes("enermy0", cc.SpriteFrame);
                 this.step = 1;
-                this.blood = 1;
+                this.blood = 4;
                 break;
             case 1:
                 this.sprite.spriteFrame = cc.loader.getRes("enermy1", cc.SpriteFrame);
                 this.step = 2;
-                this.blood = 2;
+                this.blood = 3;
                 break;
             case 2:
                 this.sprite.spriteFrame = cc.loader.getRes("enermy2", cc.SpriteFrame);
                 this.step = 3;
-                this.blood = 3;
+                this.blood = 2;
                 break;
             case 3:
                 this.sprite.spriteFrame = cc.loader.getRes("enermy3", cc.SpriteFrame);
                 this.step = 4;
-                this.blood = 4;
+                this.blood = 1;
                 break;
         }
     },
 
     update(dt) {
-        // if(!this.checkMove(this.direction)) {
-        //     this.autoChangeDirection();
-        // }
-    },
-
-    onDead() {
-        this.deadNode.active = true;
-        this.deadNode.parent = Tool.GameScene().mapCtrl.node;
-        this.deadNode.position = this.node.position;
-        this.deadNode.getComponent(cc.Animation).play('blast');
-        var seq = cc.sequence(cc.delayTime(0.6), cc.callFunc(()=>this.deadNode.removeFromParent()));
-        this.deadNode.runAction(seq);
+        if(!this.checkMove(this.direction)) {
+            this.autoChangeDirection();
+        }
     },
     
     onCollisionEnter(other, self) {

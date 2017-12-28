@@ -172,6 +172,8 @@ export function campHasAll(camp, ...args){
 
 export let Brick = 16;
 export let Iron = 15;
+export let Grass = 9;
+export let Water = 1;
 
 export let Player1 = 1;
 export let Player2 = 2;

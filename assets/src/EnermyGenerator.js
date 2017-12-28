@@ -47,10 +47,9 @@ cc.Class({
     },
 
     delayCreateEnermy(pos, type){
-        Tool.GameScene().subOneHideEnermy();
 
         var born = cc.instantiate(this.bornNode);
-        born.parent = Tool.GameScene().mapCtrl.node;
+        born.parent = Tool.GameScene().mapCtrl.dynamic;
         born.position = pos;
         born.getComponent(cc.Animation).play('born');
 
@@ -60,7 +59,8 @@ cc.Class({
             var enermy = node.getComponent('EnermyTank');
             node.position = pos;
             Tool.GameScene().addMapObject(enermy);
-            enermy.setEnermyType(type);
+            enermy.setType(type);
+            Tool.GameScene().subOneHideEnermy();
         }, 1);
     },
 
