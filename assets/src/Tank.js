@@ -22,6 +22,7 @@ cc.Class({
         this.step = 2;
         this.direction = 'up';
         this.collisionTankNumber = 0;
+        this.maxBullet = 3;
     },
 
     onLoad() {
@@ -85,18 +86,24 @@ cc.Class({
             return true;
         }
     },
+
+    specificBullet(bullet){
+        bullet.setTexture('bullet');
+        bullet.camp = Tool.Player1|Tool.Bullet;
+    },
     
     checkFire() {
-        if (Tool.GameScene().cntMapObject(x=>Tool.campHasAll(x.camp,Tool.Bullet,Tool.Player1))>=3){
-            // console.log('can not fire');
+        if (Tool.GameScene().cntMapObject(x=>x.master===this)>=this.maxBullet){
+            // console.log(this, 'can not fire');
             return;
         }
+        
         var node = cc.instantiate(this.bulletPrefab);
         node.position = this.node.position;
         var bullet = node.getComponent(Bullet);
         bullet.direction = this.direction;
-        bullet.setTexture('bullet');
-        bullet.camp = Tool.Player1|Tool.Bullet;
+        bullet.master = this;
+        this.specificBullet(bullet);
         Tool.GameScene().addMapObject(bullet);
     },
 
@@ -112,8 +119,17 @@ cc.Class({
         }
     },
 
+    checkCollisionObject(other, self){
+        var mo = other.node.getComponent('MapObject');
+        // console.log('Tank', Tool.resolveCamp(mo.camp));
+        if (mo.camp&Tool.Enermy && mo.camp&Tool.Bullet) {
+            this.blood--;
+        }
+    },
+
     onCollisionEnter(other, self) {
         this.checkCollisionNumber(other, self, true);
+        this.checkCollisionObject(other, self);
     },
     onCollisionStay(other, self) {
     },

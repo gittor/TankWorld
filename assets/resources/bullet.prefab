@@ -166,10 +166,11 @@
       "__id__": 1
     },
     "_enabled": true,
+    "camp": 16,
+    "step": 5,
     "sprite": {
       "__id__": 3
-    },
-    "camp": 16
+    }
   },
   {
     "__type__": "cc.CircleCollider",

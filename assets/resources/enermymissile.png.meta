@@ -5,7 +5,7 @@
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "subMetas": {
-    "enemymissile": {
+    "enermymissile": {
       "ver": "1.0.3",
       "uuid": "97bbd245-272c-4da7-8fad-f99f8592e2cf",
       "rawTextureUuid": "c8b38992-dc94-4acc-a883-c9ee8d408ec6",

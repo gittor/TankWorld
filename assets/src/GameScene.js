@@ -24,6 +24,7 @@ cc.Class({
         debugLab: cc.Label,
         bornPrefab: cc.Prefab,
         TankPrefab: cc.Prefab,
+        p1LifeLab: cc.Label,
     },
 
     onLoad () {
@@ -40,10 +41,15 @@ cc.Class({
         this.p1 = undefined;
         this.mapObject = [];
         this.mapCtrl.cleanup();
-        GameData.cleanup();
+        GameData.destroy = [0,0,0,0];
     },
 
     delayCreatePlayer(type){
+        if(this.creatingplayer===type){
+            return;
+        }
+        this.creatingplayer = type;
+
         let bornpos;
         if (type==Tool.Player1) {
             bornpos = cc.p(300,30);
@@ -69,6 +75,7 @@ cc.Class({
             else if(type==Tool.Player2){
                 this.p2 = tank;
             }
+            this.creatingplayer = undefined;
         }, 1.5);
     },
 
@@ -76,9 +83,6 @@ cc.Class({
         this.cleanup();
         this.mapCtrl.startLevel();
         console.log('startLevel', GameData.curLevel);
-        // this.delayCreatePlayer(Tool.Player1);
-        // this.p1 = this.createPlayer();
-        // this.p1.node.position = cc.p(300,30);
         for (let i = 0; i < 20; i++) {
             let node = cc.instantiate(this.hideEnermyTemp);
             node.parent = this.hideEnermyBg;
@@ -86,6 +90,7 @@ cc.Class({
             this.hideEnermy.push(node);
         };
         this.gs.changeState(GameState.Prepare);
+        this.p1LifeLab.string = GameData.p1Life;
     },
 
     onEnable () {
@@ -100,13 +105,13 @@ cc.Class({
     addMapObject(obj){
         obj.node.parent = this.mapCtrl.dynamic;
         this.mapObject.push(obj);
-        // cc.assert(obj instanceof require('MapObject'));
-        // console.log('addMapObject', this.mapObject.length);
+        // console.log('addMapObject', Tool.resolveCamp(obj.camp));
     },
     rmMapObject(obj){
         obj.node.removeFromParent();
         this.mapObject = this.mapObject.filter(x=>x!==obj);
         this.checkState(obj);
+        // console.log('rmMapObject', Tool.resolveCamp(obj.camp));
     },
     cntMapObject(fun) {
         // console.log('cntMapObject', fun);
@@ -124,7 +129,12 @@ cc.Class({
     },
 
     update (dt) {
-        this.debugLab.string = this.cntMapObject(x=>Tool.campHasAll(x,Tool.Tank,Tool.Enermy))+"";
+        // this.debugLab.string = this.p1?this.p1.node.group: '';
+        // for(let x of this.mapObject){
+        //     if (x.master) {
+        //         this.debugLab.string += 'x';
+        //     }
+        // }
     },
     onStateChange(gs){
         console.log('gs', gs.state);
@@ -136,11 +146,13 @@ cc.Class({
             }, 1);
         }
         else if(gs.state==GameState.Failed) {
-            // this.scheduleOnce(()=>{
-            //     this.showFail();
-            // }, 3);
+            GameData.finishState = GameState.Failed;
+            this.scheduleOnce(()=>{
+                cc.director.loadScene('FinishScene');
+            }, 3);
         }
         else if(gs.state==GameState.Win) {
+            GameData.finishState = GameState.Win;
             this.scheduleOnce(()=>{
                 cc.director.loadScene('FinishScene');
             }, 3);
@@ -154,6 +166,17 @@ cc.Class({
         if (this.cntMapObject(x=>Tool.campHasAll(x.camp,Tool.Tank,Tool.Enermy))===0
             && this.hideEnermy.length===0) {
             this.gs.changeState(GameState.Win);
+        }
+        if (Tool.campHasAll(mo.camp,Tool.Tank,Tool.Player1)) {
+            this.p1 = undefined;
+            GameData.p1Life--;
+            this.p1LifeLab.string = GameData.p1Life;
+            if (GameData.p1Life===0) {
+                this.gs.changeState(GameState.Failed);
+            }
+            else{
+                this.delayCreatePlayer(Tool.Player1);
+            }
         }
     },
 });

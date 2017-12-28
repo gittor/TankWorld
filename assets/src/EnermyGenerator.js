@@ -39,7 +39,7 @@ cc.Class({
     },
 
     checkEnermy() {
-        if(4===Tool.GameScene().cntMapObject(x=>Tool.campHasAll(x.camp,Tool.Enermy,Tool.Tank)))
+        if(1===Tool.GameScene().cntMapObject(x=>Tool.campHasAll(x.camp,Tool.Enermy,Tool.Tank)))
             return;
         if (Tool.GameScene().hideEnermy.length===0)
             return;

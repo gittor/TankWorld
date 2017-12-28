@@ -21,7 +21,8 @@ cc.Class({
 
     onLoad () {
         this.accMoveTime = 0;
-        this.step = 5;
+        this.step = this.step||5;
+        this.master = this.master||undefined;
         this.schedule(this.checkMove, 0);
     },
 
@@ -47,8 +48,8 @@ cc.Class({
     },
 
     onCollisionEnter(other, self) {
-        let camp = other.node.getComponent('MapObject').camp;
-        if (camp&Tool.Player) {
+        var otherObject = other.node.getComponent('MapObject');
+        if (this.master===otherObject) {
             return;
         }
         this.blood--;

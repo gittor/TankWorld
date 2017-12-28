@@ -24,7 +24,9 @@ cc.Class({
         this.step = 2;
         this.direction = 'down';
         this.camp = Tool.Enermy|Tool.Tank;
-        this.schedule(this.autoChangeDirection, 3);
+        this.maxBullet = 1;
+        // this.schedule(this.autoChangeDirection, 3);
+        this.schedule(this.checkFire.bind(this), 1);
     },
 
     onBloodWillChange(v) {
@@ -62,23 +64,36 @@ cc.Class({
         }
     },
 
-    update(dt) {
-        if(!this.checkMove(this.direction)) {
-            this.autoChangeDirection();
-        }
+    specificBullet(bullet){
+        // bullet.setTexture('enermymissile');
+        bullet.camp = Tool.Enermy|Tool.Bullet;
+        // console.log('Enermy.specificBullet', bullet.node.group);
     },
-    
-    onCollisionEnter(other, self) {
-        this.checkCollisionNumber(other, self, true);
-        let camp = other.node.getComponent('MapObject').camp;
-        if (Tool.campHasAll(camp,Tool.Bullet,Tool.Player)) {
+
+    update(dt) {
+        // if(!this.checkMove(this.direction)) {
+        //     this.autoChangeDirection();
+        // }
+    },
+
+    checkCollisionObject(other, self){
+        var mo = other.node.getComponent('MapObject');
+        if (mo.camp&Tool.Player && mo.camp&Tool.Bullet) {
             this.blood--;
         }
     },
-    onCollisionStay(other, self) {
+    
+    // onCollisionEnter(other, self) {
+    //     this.checkCollisionNumber(other, self, true);
+    //     let camp = other.node.getComponent('MapObject').camp;
+    //     if (Tool.campHasAll(camp,Tool.Bullet,Tool.Player)) {
+    //         this.blood--;
+    //     }
+    // },
+    // onCollisionStay(other, self) {
 
-    },
-    onCollisionExit(other, self) {
-        this.checkCollisionNumber(other, self, false);
-    },
+    // },
+    // onCollisionExit(other, self) {
+    //     this.checkCollisionNumber(other, self, false);
+    // },
 });

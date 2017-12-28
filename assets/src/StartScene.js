@@ -41,7 +41,9 @@ cc.Class({
     },
 
     onClickStart(event) {
-        require('GameData').curLevel = parseInt(this.stageLab.string);
+        let gd = require('GameData');
+        gd.curLevel = parseInt(this.stageLab.string);
+        gd.p1Life = 2;
         cc.director.loadScene('GameScene');
     },
 

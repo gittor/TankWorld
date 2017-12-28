@@ -9,6 +9,7 @@
 //  - [English] http://www.cocos2d-x.org/docs/editors_and_tools/creator-chapters/scripting/life-cycle-callbacks/index.html
 
 var GameData = require('GameData');
+var GameState = require('GameState');
 var Tool = require('Tool');
 
 cc.Class({
@@ -21,12 +22,14 @@ cc.Class({
         p1DestroyTotal: cc.Label,
         p1TankScore: [cc.Label],
         nextLevel: cc.Node,
+        backMenu: cc.Node,
     },
 
     onLoad () {
         this.curShowIdx = 0;
         this.scheduleOnce(this.showIndex.bind(this), 1);
         this.nextLevel.active = false;
+        this.backMenu.active = false;
         this.totalHighScore.string = GameData.curLevel;
     },
 
@@ -40,7 +43,8 @@ cc.Class({
             this.p1DestroyTotal.string = Tool.sum(...GameData.destroy)+"";
             let s = Array.from(this.p1TankScore, x=>parseInt(x.string));
             this.p1HighScore.string = Tool.sum(...s)+"";
-            this.nextLevel.active = true;
+            this.nextLevel.active = GameData.finishState===GameState.Win;
+            this.backMenu.active = GameData.finishState===GameState.Failed;
         }
         this.curShowIdx++;
     },
@@ -48,4 +52,8 @@ cc.Class({
     onClickNext(){
         GameData.startNextLevel();
     },
+
+    onClickBack(){
+        cc.director.loadScene('StartScene');
+    }
 });
