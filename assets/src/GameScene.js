@@ -25,6 +25,7 @@ cc.Class({
         bornPrefab: cc.Prefab,
         TankPrefab: cc.Prefab,
         p1LifeLab: cc.Label,
+        homePrefab: cc.Prefab,
     },
 
     onLoad () {
@@ -91,6 +92,9 @@ cc.Class({
         };
         this.gs.changeState(GameState.Prepare);
         this.p1LifeLab.string = GameData.p1Life;
+        var home = cc.instantiate(this.homePrefab);
+        home.position = cc.p(390,30);
+        this.addMapObject(home.getComponent('HomeScript'));
     },
 
     onEnable () {
@@ -177,6 +181,9 @@ cc.Class({
             else{
                 this.delayCreatePlayer(Tool.Player1);
             }
+        }
+        if (mo.camp & Tool.Home) {
+            this.gs.changeState(GameState.Failed);
         }
     },
 });

@@ -7,7 +7,8 @@
 // Learn life-cycle callbacks:
 //  - [Chinese] http://www.cocos.com/docs/creator/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/editors_and_tools/creator-chapters/scripting/life-cycle-callbacks/index.html
-const GameScene = require("GameScene");
+var GameScene = require("GameScene");
+var GameState = require('GameState');
 
 cc.Class({
     extends: cc.Component,
@@ -100,6 +101,8 @@ cc.Class({
         if (!this.point.active)
             return;
         if (!GameScene.inst.p1)
+            return;
+        if (GameScene.inst.gs.state!==GameState.Gaming)
             return;
         this.moveTank();
     },

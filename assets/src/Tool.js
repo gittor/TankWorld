@@ -188,6 +188,7 @@ export let Player2 = 2;
 export let Enermy = 4;
 export let Tank = 8;
 export let Bullet = 16;
+export let Home = 32;
 export let Player = Player1|Player2;
 
 

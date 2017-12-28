@@ -948,7 +948,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 73.4,
+      "width": 11.67,
       "height": 40
     },
     "_rotationX": 0,
@@ -983,7 +983,7 @@
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
-    "_N$string": "Label",
+    "_N$string": "*",
     "_N$horizontalAlign": 1,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
@@ -1189,6 +1189,9 @@
     },
     "p1LifeLab": {
       "__id__": 28
+    },
+    "homePrefab": {
+      "__uuid__": "7da111d6-6bb3-47a6-92fa-7aacd8670735"
     }
   },
   {
