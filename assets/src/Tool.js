@@ -170,6 +170,14 @@ export function campHasAll(camp, ...args){
     return true;
 }
 
+export function sum(...datas){
+	let ret = 0;
+	for(let x of datas){
+		ret += x;
+	}
+	return ret;
+}
+
 export let Brick = 16;
 export let Iron = 15;
 export let Grass = 9;

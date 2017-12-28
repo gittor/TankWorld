@@ -40,6 +40,7 @@ cc.Class({
         this.p1 = undefined;
         this.mapObject = [];
         this.mapCtrl.cleanup();
+        GameData.cleanup();
     },
 
     delayCreatePlayer(type){
@@ -74,10 +75,11 @@ cc.Class({
     startLevel() {
         this.cleanup();
         this.mapCtrl.startLevel();
+        console.log('startLevel', GameData.curLevel);
         // this.delayCreatePlayer(Tool.Player1);
         // this.p1 = this.createPlayer();
         // this.p1.node.position = cc.p(300,30);
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 20; i++) {
             let node = cc.instantiate(this.hideEnermyTemp);
             node.parent = this.hideEnermyBg;
             node.position = cc.p(Math.floor(i%2)*40, -Math.floor(i/2)*40);
@@ -130,6 +132,7 @@ cc.Class({
             this.scheduleOnce(()=>{
                 this.delayCreatePlayer(Tool.Player1);
                 gs.changeState(GameState.Gaming);
+                // gs.changeState(GameState.Win);
             }, 1);
         }
         else if(gs.state==GameState.Failed) {
@@ -138,10 +141,9 @@ cc.Class({
             // }, 3);
         }
         else if(gs.state==GameState.Win) {
-            // this.scheduleOnce(()=>{
-            //     this.showWin();
-            // }, 3);
-            console.log('Win', ...GameData.destroy);
+            this.scheduleOnce(()=>{
+                cc.director.loadScene('FinishScene');
+            }, 3);
         }
     },
 
