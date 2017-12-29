@@ -3,6 +3,7 @@ export let curLevel = 0;
 export let destroy = [0,0,0,0];
 export let finishState = 0;
 export let p1Life = 0;
+export let p1Power = 1;
 
 export function startNextLevel()
 {

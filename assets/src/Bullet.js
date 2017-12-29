@@ -32,6 +32,10 @@ cc.Class({
         this.node.height = this.sprite.node.height;
     },
 
+    power() {
+        return this.master.bulletPower;
+    },
+
     checkMove(){
         if (Tool.canBulletMove(this.node, this.direction, 0)) {
             var newpos = this.node.position.add( Tool.dir2p(this.direction).mul(this.step) );
@@ -48,8 +52,11 @@ cc.Class({
     },
 
     onCollisionEnter(other, self) {
-        var otherObject = other.node.getComponent('MapObject');
-        if (this.master===otherObject) {
+        var mo = other.node.getComponent('MapObject');
+        if (this.master===mo) {
+            return;
+        }
+        if (mo.camp & Tool.Prop) {
             return;
         }
         this.blood--;

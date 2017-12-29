@@ -178,6 +178,11 @@ export function sum(...datas){
 	return ret;
 }
 
+export function now(){
+	var d = new Date();
+	return `${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}:${d.getMilliseconds()}`;
+}
+
 export let Brick = 16;
 export let Iron = 15;
 export let Grass = 9;
@@ -189,9 +194,16 @@ export let Enermy = 4;
 export let Tank = 8;
 export let Bullet = 16;
 export let Home = 32;
+export let Prop = 64;
 export let Player = Player1|Player2;
 
-
+export let PropType = {
+	Boom: 1,
+	Life: 2,
+	Star: 3,
+	Timer:4,
+	Help: 5,
+}
 
 
 

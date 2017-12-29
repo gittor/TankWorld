@@ -87,7 +87,10 @@ cc.Class({
                 continue;
             }
             var gid = this.roadLayer.getTileGIDAt(tile);
-            if ([0, Tool.Iron, Tool.Grass].includes(gid)) {
+            if (gid===0 || gid===Tool.Grass || gid===Tool.Water) {
+                continue;
+            }
+            else if (gid===Tool.Iron && bullet.power()<3) {
                 continue;
             }
             this.roadLayer.setTileGID(0, tile);

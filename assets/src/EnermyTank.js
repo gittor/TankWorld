@@ -8,15 +8,14 @@
 //  - [Chinese] http://www.cocos.com/docs/creator/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/editors_and_tools/creator-chapters/scripting/life-cycle-callbacks/index.html
 var Tool = require("Tool");
+var GameData = require("GameData");
 
 cc.Class({
     extends: require("Tank"),
 
     properties: {
-        sprite: {
-            default: null,
-            type: cc.Sprite,
-        },
+        sprite: cc.Sprite,
+        propPrefab: cc.Prefab,
     },
 
     onLoad () {
@@ -27,10 +26,22 @@ cc.Class({
         this.maxBullet = 1;
         // this.schedule(this.autoChangeDirection, 3);
         this.schedule(this.checkFire.bind(this), 1);
+        this.setRandProp();
     },
 
     onBloodWillChange(v) {
-        
+        if (!this.prop) 
+            return;
+        if (this.blood-1!==v)
+            return;
+        var node = cc.instantiate(this.propPrefab);
+        node.position = cc.p( Tool.randint()%720+30, Tool.randint()%720+30 );
+        var prop = node.getComponent('PropScript');
+        prop.setType(this.prop);
+        Tool.GameScene().addMapObject(prop);
+        this.prop = undefined;
+        this.node.stopAction(this.propAction);
+        this.propAction = undefined;
     },
 
     autoChangeDirection(dt) {
@@ -64,6 +75,24 @@ cc.Class({
         }
     },
 
+    setRandProp(){
+        if (Tool.randint()%100>10) {
+            return;
+        }
+        this.prop = Tool.randint()%5+1;
+        this.propAction = this.node.runAction( cc.tintBy(1,255,0,0).reverse().repeatForever() );
+    },
+
+    onDead() {
+        var node = cc.instantiate(this.deadPrefab);
+        node.position = this.node.position;
+        node.parent = Tool.GameScene().mapCtrl.dynamic;
+        node.getComponent('AutoRemoveScript').animDelay("blast", 0.6);
+        if (this.blood===0) {
+            GameData.destroy[this.type]++;
+        }
+    },
+
     specificBullet(bullet){
         // bullet.setTexture('enermymissile');
         bullet.camp = Tool.Enermy|Tool.Bullet;
@@ -71,9 +100,9 @@ cc.Class({
     },
 
     update(dt) {
-        // if(!this.checkMove(this.direction)) {
-        //     this.autoChangeDirection();
-        // }
+        if(!this.checkMove(this.direction)) {
+            this.autoChangeDirection();
+        }
     },
 
     checkCollisionObject(other, self){

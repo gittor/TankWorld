@@ -8,52 +8,47 @@
 //  - [Chinese] http://www.cocos.com/docs/creator/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/editors_and_tools/creator-chapters/scripting/life-cycle-callbacks/index.html
 var Tool = require('Tool');
+var GameData = require('GameData');
 
 cc.Class({
-    extends: cc.Component,
+    extends: require('MapObject'),
 
     properties: {
-        direction: {
-            get: function(){
-                return this._direction;
-            },
-            set: function(v){
-                this._direction = v;
-                this.node.rotation = Tool.dir2rot(v);
-            }
-        },
-        camp: 0,
-        blood: {
-            get: function(){
-                return this._blood===undefined?1:this._blood;
-            },
-            set: function(v){
-                this.onBloodWillChange(v);
-                this._blood = v;
-                if (this._blood===0) {
-                    this.die();
-                }
-            }
-        },
-        step: 5,
+        sprite: cc.Sprite,
+        cacheSP: [cc.SpriteFrame],
     },
 
     onLoad () {
+       this.camp = Tool.Prop;
+       var big = cc.fadeTo(1, 80);
+       var normal = cc.fadeTo(1, 255);
+       this.node.runAction( cc.sequence(big, normal).repeatForever() );
     },
 
-    die() {
-        this.onDead();
-        Tool.GameScene().rmMapObject(this);
+    setType(type){
+        this.type = type;
+        this.sprite.spriteFrame = this.cacheSP[ type-1 ];
     },
 
-    onBloodWillChange(){
-
+    onDead() {
+        if (this.blood===0) {
+            return;
+        }
     },
 
     onCollisionEnter(other, self) {
+        var mo = other.node.getComponent('MapObject');
+        if ( !(mo.camp&Tool.Tank) )
+            return;
+        if ( !(mo.camp&Tool.Player) )
+            return;
+        Tool.GameScene().pm.addProp(mo, this.type);
+        this.blood--;
     },
     onCollisionStay(other, self) {
+
     },
     onCollisionExit(other, self) {
+
     },
 });

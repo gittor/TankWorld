@@ -13,7 +13,7 @@ cc.Class({
     extends: require('MapObject'),
 
     properties: {
-        
+        destroyImg: cc.Node,
     },
 
     onLoad () {
@@ -21,10 +21,14 @@ cc.Class({
        var big = cc.scaleTo(0.2, 1.2, 1.2);
        var normal = cc.scaleTo(2, 1.0, 1.0);
        this.node.runAction( cc.sequence(big, normal).repeatForever() );
+       this.destroyImg.active = false;
     },
 
     onDead() {
-
+        var node = cc.instantiate(this.destroyImg);
+        node.active = true;
+        node.position = this.node.position;
+        node.parent = Tool.GameScene().mapCtrl.dynamic;
     },
 
     onCollisionEnter(other, self) {

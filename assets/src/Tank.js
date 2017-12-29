@@ -22,7 +22,9 @@ cc.Class({
         this.step = 2;
         this.direction = 'up';
         this.collisionTankNumber = 0;
-        this.maxBullet = 3;
+        this.maxBullet = 1;
+        this.bulletPower = 1;
+        this.bPaused = false;
     },
 
     onLoad() {
@@ -64,6 +66,9 @@ cc.Class({
     },
 
     checkMove(dir) {
+        if (this.bPaused) {
+            return true;
+        }
         this.direction = dir;
         
         if (!Tool.canMove(this.node, this.direction, this.step))
@@ -93,6 +98,9 @@ cc.Class({
     },
     
     checkFire() {
+        if (this.bPaused) {
+            return;
+        }
         if (Tool.GameScene().cntMapObject(x=>x.master===this)>=this.maxBullet){
             // console.log(this, 'can not fire');
             return;
@@ -121,9 +129,10 @@ cc.Class({
 
     checkCollisionObject(other, self){
         var mo = other.node.getComponent('MapObject');
-        // console.log('Tank', Tool.resolveCamp(mo.camp));
         if (mo.camp&Tool.Enermy && mo.camp&Tool.Bullet) {
-            this.blood--;
+            if (Tool.GameScene().pm.bulletCanHitPlayer(mo)) {
+                this.blood--;
+            }
         }
     },
 

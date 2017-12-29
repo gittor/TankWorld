@@ -102,7 +102,7 @@ cc.Class({
             return;
         if (!GameScene.inst.p1)
             return;
-        if (GameScene.inst.gs.state!==GameState.Gaming)
+        if (GameScene.inst.gs.state===GameState.Failed)
             return;
         this.moveTank();
     },

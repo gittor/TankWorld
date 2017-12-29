@@ -39,7 +39,7 @@ cc.Class({
     },
 
     checkEnermy() {
-        if(1===Tool.GameScene().cntMapObject(x=>Tool.campHasAll(x.camp,Tool.Enermy,Tool.Tank)))
+        if(4===Tool.GameScene().cntMapObject(x=>Tool.campHasAll(x.camp,Tool.Enermy,Tool.Tank)))
             return;
         if (Tool.GameScene().hideEnermy.length===0)
             return;
@@ -60,6 +60,7 @@ cc.Class({
             node.position = pos;
             Tool.GameScene().addMapObject(enermy);
             enermy.setType(type);
+            enermy.bPaused = Tool.GameScene().pm.bPaused;
             Tool.GameScene().subOneHideEnermy();
         }, 1);
     },

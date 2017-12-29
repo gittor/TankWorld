@@ -11,6 +11,7 @@
 var Tank = require("Tank");
 var Tool = require('Tool');
 var GameState = require('GameState');
+var PropManager = require('PropManager');
 var GameData = require('GameData');
 
 export var inst = null;
@@ -32,6 +33,7 @@ cc.Class({
         inst = this;
         this.cleanup();
         this.gs = new GameState.GameState();
+        this.pm = new PropManager.PropManager();
         this.gs.addObserver(this);
         this.startLevel();
     },
@@ -91,7 +93,7 @@ cc.Class({
             this.hideEnermy.push(node);
         };
         this.gs.changeState(GameState.Prepare);
-        this.p1LifeLab.string = GameData.p1Life;
+        this.refreshView();
         var home = cc.instantiate(this.homePrefab);
         home.position = cc.p(390,30);
         this.addMapObject(home.getComponent('HomeScript'));
@@ -99,7 +101,7 @@ cc.Class({
 
     onEnable () {
         cc.director.getCollisionManager().enabled = true;
-        cc.director.getCollisionManager().enabledDebugDraw = true;
+        // cc.director.getCollisionManager().enabledDebugDraw = true;
     },
     onDisable () {
         cc.director.getCollisionManager().enabled = false;
@@ -133,7 +135,7 @@ cc.Class({
     },
 
     update (dt) {
-        // this.debugLab.string = this.p1?this.p1.node.group: '';
+        this.debugLab.string = this.p1?this.p1.bulletPower:"";
         // for(let x of this.mapObject){
         //     if (x.master) {
         //         this.debugLab.string += 'x';
@@ -152,21 +154,25 @@ cc.Class({
         else if(gs.state==GameState.Failed) {
             GameData.finishState = GameState.Failed;
             this.scheduleOnce(()=>{
+                this.pm.cleanup();
                 cc.director.loadScene('FinishScene');
             }, 3);
         }
         else if(gs.state==GameState.Win) {
             GameData.finishState = GameState.Win;
+            GameData.p1Power = this.p1?this.p1.bulletPower:1;
             this.scheduleOnce(()=>{
+                this.pm.cleanup();
                 cc.director.loadScene('FinishScene');
             }, 3);
         }
     },
 
+    refreshView(){
+        this.p1LifeLab.string = GameData.p1Life;
+    },
+
     checkState(mo) {
-        if (Tool.campHasAll(mo.camp,Tool.Tank,Tool.Enermy)) {
-            GameData.destroy[mo.type]++;
-        }
         if (this.cntMapObject(x=>Tool.campHasAll(x.camp,Tool.Tank,Tool.Enermy))===0
             && this.hideEnermy.length===0) {
             this.gs.changeState(GameState.Win);
