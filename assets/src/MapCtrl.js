@@ -32,6 +32,14 @@ cc.Class({
     startLevel() {
         this.tileMap.tmxAsset = cc.loader.getRes(`level${GameData.curLevel}.tmx`);
         this.roadLayer = this.tileMap.getLayer('块层 1');
+        
+        console.log('mapCtrl', cc.loader.getRes(`level${GameData.curLevel}.tmx`));
+        var logicChildren = this.tileMap.node.children;
+        for (var i = 0, n = logicChildren.length; i < n; i++) {
+            var child = logicChildren[i];
+            var tmxLayer = child.getComponent(cc.TiledLayer);
+            console.log(tmxLayer?tmxLayer.getLayerName():'none');
+        }
     },
 
     cleanup() {
