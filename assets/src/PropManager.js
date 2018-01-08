@@ -2,6 +2,7 @@
 var Tool = require('Tool');
 var TimerProp = require('TimerProp');
 var HelpProp = require('HelpProp');
+var GameData = require('GameData');
 
 export class PropManager{
 	constructor() {

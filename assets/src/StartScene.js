@@ -15,36 +15,66 @@ cc.Class({
     properties: {
         menuLayer: cc.Node,
         stageLayer: cc.Node,
+        multiLayer: cc.Node,
+        joinLayer: cc.Node,
         stageLab: cc.Label,
+        serverAddr: cc.Label,
+        p2name: cc.Label,
+        multiStartBtn: cc.Node,
+        p2Addr: cc.EditBox,
+        p2State: cc.Label,
+        p2Join: cc.Node,
+        retBtn: cc.Node,
     },
 
     onLoad() {
-        this.menuLayer.active = true;
-        this.stageLayer.active = false;
+        this.showLayer(this.menuLayer);
         this.stageLayer.width = cc.director.getWinSize().width;
         this.stageLayer.height = cc.director.getWinSize().height;
         this.stageLab.string = "1";
     },
 
+    showLayer(wantshow){
+        var lays = [this.menuLayer,this.stageLayer,this.multiLayer,this.joinLayer];
+        for(let x of lays){
+            x.active = x===wantshow;
+        }
+        this.retBtn.active = !this.menuLayer.active;
+    },
+
     onClick1Player(event){
-        this.menuLayer.active = false;
-        this.stageLayer.active = true;
-        // cc.director.loadScene('GameScene');
+        this.showLayer(this.stageLayer);
     },
 
-    onClick2Player(event){
-        console.log(event);
-    },
-
-    onClickConstruct(event){
-        console.log(event);
-    },
-
-    onClickStart(event) {
+    onClick1PlayerStart(event) {
         let gd = require('GameData');
         gd.curLevel = parseInt(this.stageLab.string);
         gd.p1Life = 2;
         cc.director.loadScene('GameScene');
     },
 
+    onClickMulti(event){
+        this.showLayer(this.multiLayer);
+        // console.log(require('socket.io'));
+        // console.log(io.serve);
+        // console.log(io.connect);
+        // var socketio = require('socket.io');
+        console.log(server);
+    },
+
+    onClickMultiStart(event){
+
+    },
+
+    onClickJoin(event){
+        this.showLayer(this.joinLayer);
+    },
+
+    onClickJoinStart(event){
+
+    },
+
+    onClickReturn(event){
+        this.showLayer(this.menuLayer);
+    },
 });
